@@ -28,11 +28,11 @@ Demo de componente de search para UI kit. Se presupone que todos las API's que u
 
 ## Requirements
 
-Tested with:
+*Tested with:*
 
-`node 12.14.0`
+node 12.14.0
 
-`npm 6.13.4`
+npm 6.13.4
 
 ## Project setup
 ```
