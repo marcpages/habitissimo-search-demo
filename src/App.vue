@@ -1,28 +1,56 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <div id="app">
+        <Search
+                query-url="https://cors-anywhere.herokuapp.com/https://www.habitissimo.es/p/api/autocomplete/category"
+                query-param="search"
+                :query-extra-params="queryExtraParams"
+                @itemClick="openItem"
+                placeholder="Qué necesitas..."
+                label="Encuentra profesionales de confianza"
+        ></Search>
+    </div>
 </template>
 
-<script>
-import HelloWorld from './components/HelloWorld.vue';
+<script lang="ts">
+    import Vue from 'vue';
+    import Search from './components/Search.vue';
+    import {SearchResult} from "@/types/search-result";
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld,
-  },
-};
+    export default Vue.extend({
+        name: 'App',
+        components: {
+            Search,
+        },
+        data() {
+            return {
+                queryExtraParams: {
+                    limit: 200,
+                    tree_level: [1,2]
+                }
+            }
+        },
+        methods: {
+            openItem(item: SearchResult) {
+                this.$emit('itemClick', item);
+                window.location.href = 'https://empresas.habitissimo.es/' + item.normalized_name;
+            },
+        },
+    });
 </script>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+    @import './assets/fonts/montserrat/stylesheet.css';
+    @import './assets/fonts/icons/icons.css';
+
+    * {
+        font-family: 'Montserrat', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    #app {
+        display: flex;
+        height: 100vh;
+        padding-top: 100px;
+    }
 </style>

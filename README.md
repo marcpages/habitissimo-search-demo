@@ -1,5 +1,31 @@
 # habitissimo-search-demo
 
+## Descripción
+
+Demo de componente de search para UI kit. Se presupone que todos las API's que use el componente van a usar la misma estructura de respuesta, si no fuera así se debería desacoplar la parte de la request del componente.
+
+### Component params
+
+| Param            | Type   | Default     | Description                           |
+|------------------|--------|-------------|---------------------------------------|
+| queryUrl         | String | null        | API URL to query                      |
+| queryParam       | String | 'search'    | Search query param key                |
+| queryExtraParams | Object | {}          | Extra params to add into each request |
+| placeholder      | String | 'Buscar...' | Search input placeholder              |
+| label            | String | ''          | Input label                           |
+
+## Events
+
+| Event     | Params | Description                   |
+|-----------|--------|-------------------------------|
+| itemClick | item   | Triggers on result item click |
+
+## Slots
+
+ | Slot        | Available vars | Description                       |
+ |-------------|----------------|-----------------------------------|
+ | result-item | item           | Template for each result item row |
+
 ## Project setup
 ```
 npm install
@@ -25,5 +51,7 @@ npm run test:unit
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Regenerate icons font
+```
+npm run icons
+```
