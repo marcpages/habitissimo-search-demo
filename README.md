@@ -32,7 +32,7 @@ Tested with:
 
 `node 12.14.0`
 
-`npm 6.13.4
+`npm 6.13.4`
 
 ## Project setup
 ```
