@@ -26,6 +26,14 @@ Demo de componente de search para UI kit. Se presupone que todos las API's que u
  |-------------|----------------|-----------------------------------|
  | result-item | item           | Template for each result item row |
 
+## Requirements
+
+Tested with:
+
+`node 12.14.0`
+
+`npm 6.13.4
+
 ## Project setup
 ```
 npm install
@@ -41,7 +49,7 @@ npm run serve
 npm run build
 ```
 
-### Run your unit tests
+### Run unit tests
 ```
 npm run test:unit
 ```
