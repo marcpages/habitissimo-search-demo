@@ -71,6 +71,10 @@
                 type: String,
                 default: ''
             },
+            getResultsFnc: {
+              type: Function,
+              required: true
+            }
         },
         data() {
             return {
@@ -101,31 +105,16 @@
             getResults(query: string) {
                 if (query !== '') {
                     this.searchState = searchStates.Loading
-                    axios({
-                        method: 'get',
-                        url: this.queryUrl,
-                        cancelToken: new CancelToken( (c) => {
-                            this.cancel = c;
-                        }),
-                        params: this.getQueryParams(query)
-                    })
-                        .then(res => {
-                            this.results = res.data;
-                            this.searchState = searchStates.HasResults
-                        })
-                        .catch(err => {
-                            if (axios.isCancel(err)) return;
-                            this.searchState = searchStates.Error
-                            throw Error(err.message);
-                        });
+                    this.getResultsFnc(query).then( res => {
+                      this.results = res;
+                      this.searchState = searchStates.HasResults;
+                    }).catch( err => {
+                      this.searchState = searchStates.Error
+                      throw Error(err.message);
+                    });
                 } else {
                     this.clear();
                 }
-            },
-            getQueryParams(query: string): Object {
-                let queryParams = _.clone(this.queryExtraParams);
-                queryParams[this.queryParam] = query;
-                return queryParams;
             },
             clear() {
                 this.isLoading = false;
