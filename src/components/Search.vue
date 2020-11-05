@@ -10,14 +10,12 @@
                         @focusout="setFocused(false)"
                         @keyup.stop="querySearch"
                 />
-                <i v-show="!isLoading" class="icon-search"></i>
-                <img v-show="isLoading" src="../assets/images/loader.svg"/>
+                <i v-show="!searchState === searchStates.Loading" class="icon-search"></i>
+                <img v-show="searchState === searchStates.Loading" src="../assets/images/loader.svg"/>
             </div>
             <ul class="results" :class="{'show': isFocused}">
-                <li v-if="!isLoading && hasLoadedResults && results.length === 0 && !isError"
-                    class="message no-results">No hay resultados
-                </li>
-                <li v-if="!isLoading && isError" class="message error">No se han podido cargar los resultados. Por
+                <li v-if="searchState === searchStates.NoResults" class="message no-results">No hay resultados</li>
+                <li v-if="searchState === searchStates.Error" class="message error">No se han podido cargar los resultados. Por
                     favor, inténtalo de nuevo más tarde.
                 </li>
                 <li v-for="item of results" :key="item.id" @click="openItem(item)">
@@ -40,6 +38,13 @@
 
     let cancel: Canceler;
     const CancelToken = axios.CancelToken;
+
+    enum searchStates {
+      NoResults = 1,
+      Error,
+      HasResults,
+      Loading
+    }
 
     export default Vue.extend({
         name: 'Search',
@@ -71,10 +76,9 @@
             return {
                 query: '',
                 results: [] as SearchResult[],
-                hasLoadedResults: false,
                 isFocused: false,
-                isLoading: false,
-                isError: false,
+                searchStates: searchStates,
+                searchState: searchStates.Loading
             };
         },
         mounted() {
@@ -96,7 +100,7 @@
             getResults(query: string) {
                 console.log('getResults');
                 if (query !== '') {
-                    this.isLoading = true;
+                    this.searchState = searchStates.Loading
                     axios({
                         method: 'get',
                         url: this.queryUrl,
@@ -107,14 +111,11 @@
                     })
                         .then(res => {
                             this.results = res.data;
-                            this.isLoading = false;
-                            this.hasLoadedResults = true;
-                            this.isError = false;
+                            this.searchState = searchStates.HasResults
                         })
                         .catch(err => {
                             if (axios.isCancel(err)) return;
-                            this.isError = true;
-                            this.isLoading = false;
+                            this.searchState = searchStates.Error
                             throw Error(err.message);
                         });
                 } else {
@@ -140,7 +141,6 @@
         filters: {
             highlight,
         },
-
     });
 </script>
 
