@@ -36,11 +36,11 @@
     import Vue from 'vue';
     import {SearchResult} from '@/types/search-result';
 
-    let cancel: Canceler;
     const CancelToken = axios.CancelToken;
 
     enum searchStates {
-      NoResults = 1,
+      Initial = 1,
+      NoResults,
       Error,
       HasResults,
       Loading
@@ -78,7 +78,8 @@
                 results: [] as SearchResult[],
                 isFocused: false,
                 searchStates: searchStates,
-                searchState: searchStates.Loading
+                searchState: searchStates.Initial,
+                cancel: Canceler
             };
         },
         mounted() {
@@ -92,20 +93,19 @@
                 this.beforeGetResults();
             }, 350),
             beforeGetResults() {
-                if (cancel != undefined) {
-                    cancel();
+                if (this.cancel != undefined) {
+                    this.cancel();
                 }
                 this.getResults(this.query);
             },
             getResults(query: string) {
-                console.log('getResults');
                 if (query !== '') {
                     this.searchState = searchStates.Loading
                     axios({
                         method: 'get',
                         url: this.queryUrl,
-                        cancelToken: new CancelToken(function executor(c) {
-                            cancel = c;
+                        cancelToken: new CancelToken( (c) => {
+                            this.cancel = c;
                         }),
                         params: this.getQueryParams(query)
                     })
